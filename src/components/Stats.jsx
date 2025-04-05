@@ -1,3 +1,4 @@
+// src/components/Stats.jsx
 import React from 'react';
 import { useWork } from '../contexts/WorkContext';
 
@@ -81,9 +82,9 @@ const Stats = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                 </svg>
-                <span>+200 sats</span>
+                <span>+{stats.hourlyRate} sats</span>
               </div>
-              <span className="text-gray-500 ml-2">since last week</span>
+              <span className="text-gray-500 ml-2">since last hour</span>
             </div>
           </div>
           
@@ -92,7 +93,7 @@ const Stats = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Rate: 100 sats per hour
+              Rate: {stats.hourlyRate} sats per hour
             </div>
           </div>
         </div>

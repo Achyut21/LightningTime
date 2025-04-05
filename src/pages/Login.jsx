@@ -53,7 +53,7 @@ const Login = () => {
     }
   };
 
-  // Simple Debug Login Modal
+  // Simple Debug Login
   const handleDebugLogin = (role) => {
     if (role === 'admin') {
       adminLogin('admin123');

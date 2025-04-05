@@ -1,81 +1,75 @@
-// src/services/api.js
-// Mock API implementations for MVP
+import axios from 'axios';
 
-// Simulated delay function
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const API_URL = '/api';
 
-// Mock data
-let mockPayments = [];
-let mockStats = {
-  totalHoursPaid: 0,
-  totalSatsPaid: 0,
-  isCheckedIn: false,
-  checkInTime: null,
-  lastPaymentTime: null,
-  currentSessionDuration: 0,
-  payments: []
-};
+// Create axios instance with base URL
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add auth token to requests if available
+api.interceptors.request.use(
+  (config) => {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user && user.role) {
+      config.headers['X-User-Role'] = user.role;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Auth endpoints
-export const userLogin = async (username) => {
-  await delay(500);
-  return { status: 'success', user: { username, role: 'user' } };
+export const userLogin = (username) => {
+  return api.post('/auth/login', { username, role: 'user' });
 };
 
-export const adminLogin = async (password) => {
-  await delay(500);
-  if (password === 'admin123') {
-    return { status: 'success', user: { username: 'admin', role: 'admin' } };
-  } else {
-    throw new Error('Invalid admin password');
-  }
+export const adminLogin = (password) => {
+  return api.post('/auth/admin-login', { password });
 };
 
 // Work tracking endpoints
-export const checkInUser = async () => {
-  await delay(500);
-  mockStats.isCheckedIn = true;
-  mockStats.checkInTime = Date.now();
-  return { status: 'success' };
+export const checkInUser = () => {
+  return api.post('/stats/check-in');
 };
 
-export const checkOutUser = async () => {
-  await delay(500);
-  mockStats.isCheckedIn = false;
-  mockStats.currentSessionDuration = Date.now() - mockStats.checkInTime;
-  return { status: 'success' };
+export const checkOutUser = () => {
+  return api.post('/stats/check-out');
 };
 
 export const getWorkStats = async () => {
-  await delay(500);
-  return { ...mockStats, payments: mockPayments };
+  const response = await api.get('/stats');
+  return response.data;
+};
+
+export const getHourlyRate = async () => {
+  const response = await api.get('/stats/hourly-rate');
+  return response.data;
 };
 
 // Payment endpoints
 export const payHourly = async () => {
-  await delay(500);
-  const payment = {
-    amount: 100,
-    timestamp: Date.now(),
-    paymentHash: Math.random().toString(36).substring(2, 15),
-    status: 'success'
-  };
-  
-  mockPayments.push(payment);
-  mockStats.totalSatsPaid += payment.amount;
-  mockStats.totalHoursPaid += 1;
-  mockStats.lastPaymentTime = payment.timestamp;
-  
-  return { status: 'ok', payment };
+  const response = await api.post('/payment/pay-hourly');
+  return response.data;
 };
 
 export const getPaymentHistory = async () => {
-  await delay(500);
-  return { payments: mockPayments };
+  const response = await api.get('/payment/history');
+  return response.data;
 };
 
 export const manualPay = async () => {
-  return payHourly();
+  const response = await api.post('/payment/manual-pay');
+  return response.data;
+};
+
+// Lightning wallet info
+export const getWalletInfo = async () => {
+  const response = await api.get('/payment/wallet-info');
+  return response.data;
 };
 
 export default {
@@ -84,7 +78,9 @@ export default {
   checkInUser,
   checkOutUser,
   getWorkStats,
+  getHourlyRate,
   payHourly,
   getPaymentHistory,
-  manualPay
+  manualPay,
+  getWalletInfo
 };

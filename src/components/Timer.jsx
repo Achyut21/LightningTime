@@ -1,3 +1,4 @@
+// src/components/Timer.jsx
 import React from 'react';
 import { useWork } from '../contexts/WorkContext';
 
@@ -5,12 +6,12 @@ const Timer = () => {
   const { elapsedSeconds, getFormattedTime, earnedSats, HOURLY_RATE, isCheckedIn } = useWork();
   
   // Calculate next payout time
-  const secondsUntilNextPayout = 3600 - (elapsedSeconds % 3600);
+  const secondsUntilNextPayout = 30 - (elapsedSeconds % 30);
   const nextPayoutMinutes = Math.floor(secondsUntilNextPayout / 60);
   const nextPayoutSeconds = secondsUntilNextPayout % 60;
   
   // Calculate progress for the progress ring
-  const payoutProgress = ((3600 - secondsUntilNextPayout) / 3600) * 100;
+  const payoutProgress = ((30 - secondsUntilNextPayout) / 30) * 100;
   
   // SVG circle properties for progress ring
   const radius = 70;

@@ -1,3 +1,4 @@
+// src/pages/UserDashboard.jsx
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -100,7 +101,7 @@ const UserDashboard = () => {
                       </div>
                       <span className="text-gray-300">Last Payment</span>
                     </div>
-                    <span className="text-primary-light font-medium">100 sats</span>
+                    <span className="text-primary-light font-medium">3 sats</span>
                   </div>
                   
                   <div className="flex justify-between items-center p-3 bg-dark-lighter rounded-lg">
@@ -131,12 +132,12 @@ const UserDashboard = () => {
                     </div>
                     <div>
                       <div className="text-xs text-gray-400">Connected Wallet</div>
-                      <div className="text-white font-medium">Voltage Node</div>
+                      <div className="text-white font-medium">LNbits Node</div>
                     </div>
                   </div>
                   
                   <div className="bg-dark p-3 rounded border border-dark-border font-mono text-xs text-gray-400 break-all">
-                    034a7afd7252b93d0b2f8beed5caedcb1372f70dcf4e54d311ce1e440f8ecf8e1e
+                    12167a02f43642c9a53132a2bf924fbf
                   </div>
                 </div>
               </div>
@@ -161,7 +162,7 @@ const UserDashboard = () => {
                 </li>
                 <li className="flex">
                   <span className="bg-primary/20 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-3 flex-shrink-0">3</span>
-                  <span>You'll earn <strong className="text-primary-light">100 sats</strong> per hour automatically.</span>
+                  <span>You'll earn <strong className="text-primary-light">3 sats</strong> per hour automatically.</span>
                 </li>
                 <li className="flex">
                   <span className="bg-primary/20 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-3 flex-shrink-0">4</span>

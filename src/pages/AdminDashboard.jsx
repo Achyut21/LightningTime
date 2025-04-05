@@ -8,7 +8,15 @@ import PaymentLog from '../components/PaymentLog';
 
 const AdminDashboard = () => {
   const { user, isAdmin } = useAuth();
-  const { fetchStats, triggerPayment, isCheckedIn, loading, error } = useWork();
+  const { 
+    fetchStats, 
+    triggerPayment, 
+    isCheckedIn, 
+    loading, 
+    error, 
+    stats,
+    walletInfo 
+  } = useWork();
   const [refreshCounter, setRefreshCounter] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [actionSuccess, setActionSuccess] = useState('');
@@ -211,39 +219,58 @@ const AdminDashboard = () => {
                         </svg>
                       </div>
                       <div>
-                        <div className="text-white font-medium">Voltage LND Node</div>
-                        <div className="text-xs text-gray-400">Cloud-hosted Lightning node</div>
+                        <div className="text-white font-medium">LNbits Node</div>
+                        <div className="text-xs text-gray-400">Lightning Network via LNbits</div>
                       </div>
                     </div>
                     
                     <div className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900 text-green-300">
-                      Online
+                      {stats.nodeStatus?.status === 'online' ? 'Online' : 'Offline'}
                     </div>
                   </div>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="p-4 bg-dark-lighter rounded-lg border border-dark-border">
-                      <div className="text-xs text-gray-400 mb-1">Channel Balance</div>
+                      <div className="text-xs text-gray-400 mb-1">Admin Wallet Balance</div>
                       <div className="text-xl font-mono text-white flex items-center">
                         <span className="text-lightning mr-1">₿</span>
-                        50,000
+                        {stats.adminWalletBalance || 0}
                         <span className="text-xs ml-1 text-gray-400">sats</span>
                       </div>
                     </div>
                     
                     <div className="p-4 bg-dark-lighter rounded-lg border border-dark-border">
-                      <div className="text-xs text-gray-400 mb-1">Fee Rate</div>
-                      <div className="text-xl font-mono text-white">
-                        1
-                        <span className="text-xs ml-1 text-gray-400">sat/vbyte</span>
+                      <div className="text-xs text-gray-400 mb-1">User Wallet Balance</div>
+                      <div className="text-xl font-mono text-white flex items-center">
+                        <span className="text-lightning mr-1">₿</span>
+                        {stats.userWalletBalance || 0}
+                        <span className="text-xs ml-1 text-gray-400">sats</span>
                       </div>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-dark-lighter rounded-lg border border-dark-border">
+                    <div className="text-xs text-gray-400 mb-2">Hourly Payment Rate</div>
+                    <div className="flex items-center justify-between">
+                      <div className="text-xl font-mono text-white flex items-center">
+                        <span className="text-lightning mr-1">₿</span>
+                        {stats.hourlyRate || 3}
+                        <span className="text-xs ml-1 text-gray-400">sats/hour</span>
+                      </div>
+                      
+                      <button 
+                        onClick={handleManualPayment}
+                        disabled={loading || !isCheckedIn}
+                        className="btn btn-primary btn-sm text-xs"
+                      >
+                        Force Payment
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             
-            {/* Payment History */}
             <PaymentLog />
             
             {/* Admin Tools */}
@@ -329,7 +356,7 @@ const AdminDashboard = () => {
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                     </svg>
                     <p className="text-sm">
-                      In this demo, Lightning payments are simulated. In a production environment, this would connect to a real Voltage LND node to process actual Bitcoin payments.
+                      In this demo, payments are processed via LNbits with real Lightning Network transactions. Each hour worked earns 3 sats, paid instantly to the worker's Lightning wallet.
                     </p>
                   </div>
                 </div>

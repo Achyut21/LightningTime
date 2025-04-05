@@ -1,35 +1,35 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-// Create the context
+// Create context
 const AuthContext = createContext();
 
-// Export the useAuth hook
+// Create and export the hook
 export const useAuth = () => useContext(AuthContext);
 
-// AuthProvider component
+// Provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    // Check for saved user on load
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
     }
     setLoading(false);
   }, []);
 
-  const login = (role, username = 'default') => {
-    // For MVP, simple role-based auth without password validation
+  // Login function for regular users
+  const login = (role, username) => {
     const userData = { role, username };
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
     return true;
   };
 
+  // Admin login with password check
   const adminLogin = (password) => {
-    // For MVP, hardcoded admin password
     if (password === 'admin123') {
       login('admin', 'admin');
       return true;
@@ -37,14 +37,17 @@ export const AuthProvider = ({ children }) => {
     return false;
   };
 
+  // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
   };
 
+  // Helper functions
   const isAdmin = () => user?.role === 'admin';
   const isUser = () => user?.role === 'user';
 
+  // Value to provide through context
   const value = {
     user,
     loading,
@@ -55,9 +58,5 @@ export const AuthProvider = ({ children }) => {
     isUser
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
