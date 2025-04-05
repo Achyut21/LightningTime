@@ -1,7 +1,7 @@
 // src/contexts/WorkContext.jsx
-import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
-import { checkInUser, checkOutUser, getWorkStats, payHourly } from '../services/api';
+import { lightningService } from '../services/lightning';
 
 // Create the context
 const WorkContext = createContext();
@@ -11,137 +11,56 @@ export const useWork = () => useContext(WorkContext);
 
 export const WorkProvider = ({ children }) => {
   const { user } = useAuth();
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [isWorking, setIsWorking] = useState(false);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [lastPaymentTime, setLastPaymentTime] = useState(null);
-  const [paymentHistory, setPaymentHistory] = useState([]);
-  const [stats, setStats] = useState({
-    totalHoursPaid: 0,
-    totalSatsPaid: 0
-  });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  // Hourly rate in sats
-  const HOURLY_RATE = 100;
-
-  // Calculate earned sats based on elapsed time
-  const earnedSats = Math.floor((elapsedSeconds / 3600) * HOURLY_RATE);
-  
-  // Load stats when user changes
-  useEffect(() => {
-    if (user) {
-      fetchStats();
-    }
-  }, [user]);
+  const [loading, setLoading] = useState(false);
 
   // Timer effect
   useEffect(() => {
     let timer;
-    
-    if (isCheckedIn) {
+    if (isWorking) {
       timer = setInterval(() => {
-        setElapsedSeconds(prev => {
-          const newValue = prev + 1;
-          
-          // Check if an hour has passed (3600 seconds)
-          // In a real app, we might not reset the timer, but for simplicity we'll check each hour
-          if (newValue % 3600 === 0) {
-            processHourlyPayment();
-          }
-          
-          return newValue;
-        });
+        setElapsedSeconds(prev => prev + 1);
       }, 1000);
     }
-    
     return () => clearInterval(timer);
-  }, [isCheckedIn]);
+  }, [isWorking]);
 
-  const fetchStats = useCallback(async () => {
+  const startWork = async () => {
     try {
       setLoading(true);
-      const data = await getWorkStats();
-      setStats(data);
-      setPaymentHistory(data.payments || []);
       setError(null);
-    } catch (err) {
-      setError("Failed to load work stats");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const checkIn = async () => {
-    try {
-      setLoading(true);
-      await checkInUser();
-      setIsCheckedIn(true);
-      setElapsedSeconds(0);
-      setError(null);
-    } catch (err) {
-      setError("Failed to check in");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const checkOut = async () => {
-    try {
-      setLoading(true);
-      await checkOutUser();
-      setIsCheckedIn(false);
-      setElapsedSeconds(0);
-      await fetchStats(); // Refresh stats after checkout
-      setError(null);
-    } catch (err) {
-      setError("Failed to check out");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const processHourlyPayment = async () => {
-    try {
-      const response = await payHourly();
       
-      if (response.status === 'ok') {
-        setLastPaymentTime(Date.now());
-        
-        // Add to payment history
-        const newPayment = {
-          amount: HOURLY_RATE,
-          timestamp: Date.now()
-        };
-        
-        setPaymentHistory(prev => [...prev, newPayment]);
-        
-        // Update stats
-        setStats(prev => ({
-          ...prev,
-          totalHoursPaid: prev.totalHoursPaid + 1,
-          totalSatsPaid: prev.totalSatsPaid + HOURLY_RATE
-        }));
+      const result = await lightningService.startWorking();
+      if (result.success) {
+        setIsWorking(true);
+        setElapsedSeconds(0);
+      } else {
+        throw new Error(result.error || 'Failed to start working');
       }
     } catch (err) {
-      console.error("Payment failed:", err);
-      // Don't stop the timer on payment failure
+      setError(err.message);
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // For admin: force payment
-  const triggerPayment = async () => {
-    if (!isCheckedIn) return;
-    
+  const stopWork = async () => {
     try {
       setLoading(true);
-      await processHourlyPayment();
       setError(null);
+      
+      const result = await lightningService.stopWorking();
+      if (result.success) {
+        setIsWorking(false);
+        setElapsedSeconds(0);
+      } else {
+        throw new Error(result.error || 'Failed to stop working');
+      }
     } catch (err) {
-      setError("Manual payment failed");
+      setError(err.message);
       console.error(err);
     } finally {
       setLoading(false);
@@ -152,29 +71,19 @@ export const WorkProvider = ({ children }) => {
     const hours = Math.floor(elapsedSeconds / 3600);
     const minutes = Math.floor((elapsedSeconds % 3600) / 60);
     const seconds = elapsedSeconds % 60;
-    
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const value = {
-    isCheckedIn,
-    elapsedSeconds,
-    earnedSats,
-    paymentHistory,
-    stats,
-    lastPaymentTime,
-    loading,
-    error,
-    checkIn,
-    checkOut,
-    triggerPayment,
-    getFormattedTime,
-    HOURLY_RATE,
-    fetchStats
-  };
-
   return (
-    <WorkContext.Provider value={value}>
+    <WorkContext.Provider value={{
+      isWorking,
+      elapsedSeconds,
+      loading,
+      error,
+      startWork,
+      stopWork,
+      getFormattedTime
+    }}>
       {children}
     </WorkContext.Provider>
   );

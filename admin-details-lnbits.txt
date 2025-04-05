@@ -1,0 +1,55 @@
+Node URL: https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev
+Wallet ID: 88a56335f416420e88ff407382b3bb50
+Admin key: be6b5f7433f348fe8c4eedd5bd964b7c
+Invoice/read key: 0957dc32740a4543b0e214360c330351
+
+
+Get wallet details
+GET /api/v1/wallet
+Headers
+{"X-Api-Key": "0957dc32740a4543b0e214360c330351"}
+Returns 200 OK (application/json)
+{"id": <string>, "name": <string>, "balance": <int>}
+Curl example
+curl https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/wallet -H "X-Api-Key: 0957dc32740a4543b0e214360c330351"
+
+
+Create an invoice (incoming)
+POST /api/v1/payments
+Headers
+{"X-Api-Key": "0957dc32740a4543b0e214360c330351"}
+Body (application/json)
+{"out": false, "amount": <int>, "memo": <string>, "expiry": <int>, "unit": <string>, "webhook": <url:string>, "internal": <bool>}
+Returns 201 CREATED (application/json)
+{"payment_hash": <string>, "payment_request": <string>}
+Curl example
+curl -X POST https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments -d '{"out": false, "amount": <int>, "memo": <string>}' -H "X-Api-Key: 0957dc32740a4543b0e214360c330351" -H "Content-type: application/json"
+
+Create an invoice (incoming)
+POST /api/v1/payments
+Headers
+{"X-Api-Key": "0957dc32740a4543b0e214360c330351"}
+Body (application/json)
+{"out": false, "amount": <int>, "memo": <string>, "expiry": <int>, "unit": <string>, "webhook": <url:string>, "internal": <bool>}
+Returns 201 CREATED (application/json)
+{"payment_hash": <string>, "payment_request": <string>}
+Curl example
+curl -X POST https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments -d '{"out": false, "amount": <int>, "memo": <string>}' -H "X-Api-Key: 0957dc32740a4543b0e214360c330351" -H "Content-type: application/json"
+
+Decode an invoice
+POST /api/v1/payments/decode
+Body (application/json)
+{"data": <string>}
+Returns 200 (application/json)
+Curl example
+curl -X POST https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments/decode -d '{"data": <bolt11/lnurl, string>}' -H "Content-type: application/json"
+
+
+Check an invoice (incoming or outgoing)
+GET /api/v1/payments/<payment_hash>
+Headers
+{"X-Api-Key": ""}
+Returns 200 OK (application/json)
+{"paid": <bool>}
+Curl example
+curl -X GET https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments/<payment_hash> -H "X-Api-Key: 0957dc32740a4543b0e214360c330351" -H "Content-type: application/json"

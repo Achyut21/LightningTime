@@ -1,0 +1,52 @@
+Node URL: https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev
+Wallet ID: 12167a02f43642c9a53132a2bf924fbf
+Admin key: 476b77cda3d14c9ca8a3004c8dba8b74
+Invoice/read key: e348b601a2324937a59a3884078eba9f
+
+
+GET /api/v1/wallet
+Headers
+{"X-Api-Key": "e348b601a2324937a59a3884078eba9f"}
+Returns 200 OK (application/json)
+{"id": <string>, "name": <string>, "balance": <int>}
+Curl example
+curl https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/wallet -H "X-Api-Key: e348b601a2324937a59a3884078eba9f"
+
+
+POST /api/v1/payments
+Headers
+{"X-Api-Key": "e348b601a2324937a59a3884078eba9f"}
+Body (application/json)
+{"out": false, "amount": <int>, "memo": <string>, "expiry": <int>, "unit": <string>, "webhook": <url:string>, "internal": <bool>}
+Returns 201 CREATED (application/json)
+{"payment_hash": <string>, "payment_request": <string>}
+Curl example
+curl -X POST https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments -d '{"out": false, "amount": <int>, "memo": <string>}' -H "X-Api-Key: e348b601a2324937a59a3884078eba9f" -H "Content-type: application/json"
+
+
+POST /api/v1/payments (reveal admin keys )
+Headers
+{"X-Api-Key": "476b77cda3d14c9ca8a3004c8dba8b74"}
+Body (application/json)
+{"out": true, "bolt11": <string>}
+Returns 201 CREATED (application/json)
+{"payment_hash": <string>}
+Curl example
+curl -X POST https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments -d '{"out": true, "bolt11": <string>}' -H "X-Api-Key: 476b77cda3d14c9ca8a3004c8dba8b74" -H "Content-type: application/json"
+
+
+POST /api/v1/payments/decode
+Body (application/json)
+{"data": <string>}
+Returns 200 (application/json)
+Curl example
+curl -X POST https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments/decode -d '{"data": <bolt11/lnurl, string>}' -H "Content-type: application/json"
+
+
+GET /api/v1/payments/<payment_hash>
+Headers
+{"X-Api-Key": ""}
+Returns 200 OK (application/json)
+{"paid": <bool>}
+Curl example
+curl -X GET https://5a420985-0ee5-43c5-9cd0-3ae126938a46-00-1t10bn97iwr4o.kirk.replit.dev/api/v1/payments/<payment_hash> -H "X-Api-Key: e348b601a2324937a59a3884078eba9f" -H "Content-type: application/json"
