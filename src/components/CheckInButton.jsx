@@ -1,4 +1,3 @@
-// src/components/CheckInButton.jsx
 import React from 'react';
 import { useWork } from '../contexts/WorkContext';
 
@@ -11,17 +10,17 @@ const CheckInButton = () => {
         onClick={isCheckedIn ? checkOut : checkIn}
         disabled={loading}
         className={`
-          relative overflow-hidden btn px-8 py-3 text-lg font-medium rounded-lg transition-all duration-300
+          relative overflow-hidden btn px-8 py-3 text-lg font-medium rounded-lg transition-all duration-700
           ${isCheckedIn 
-            ? 'bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-lg' 
-            : 'bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white shadow-lg'
+            ? 'btn-neon-pink' 
+            : 'btn-neon'
           }
         `}
       >
         {/* Background pulse effect */}
         {isCheckedIn && (
-          <span className="absolute inset-0 flex items-center justify-center">
-            <span className="h-full w-full bg-white rounded-full animate-ping opacity-10"></span>
+          <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="h-full w-full bg-pink-500 rounded-full animate-ping opacity-10"></span>
           </span>
         )}
         
@@ -40,18 +39,26 @@ const CheckInButton = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clipRule="evenodd" />
                 </svg>
-                Check Out
+                <span className="glow-text">Check Out</span>
+                
               </>
             ) : (
               <>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                 </svg>
-                Check In
+                <span className="glow-text">Check In</span>
               </>
             )}
           </div>
         )}
+        
+        {/* Additional glow effects */}
+        <div className={`absolute inset-0 rounded-lg ${
+          isCheckedIn 
+            ? 'shadow-[0_0_15px_rgba(236,72,153,0.4)]' 
+            : 'shadow-[0_0_15px_rgba(139,92,246,0.4)]'
+        } opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}></div>
       </button>
     </div>
   );

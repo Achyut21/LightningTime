@@ -5,6 +5,7 @@ import { useWork } from '../contexts/WorkContext';
 import Header from '../components/Header';
 import Stats from '../components/Stats';
 import PaymentLog from '../components/PaymentLog';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
   const { user, isAdmin } = useAuth();
@@ -330,7 +331,12 @@ const AdminDashboard = () => {
                   </div>
                   
                   <button className="w-full btn btn-secondary text-sm">
-                    View Analytics Dashboard
+                  <Link 
+  to="/analytics" 
+  className="btn btn-secondary text-sm"
+>
+  View Analytics Dashboard
+</Link>
                   </button>
                 </div>
               </div>
