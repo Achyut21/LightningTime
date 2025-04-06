@@ -167,7 +167,7 @@ Lightning Time can be used in various scenarios:
 ## Contributors
 
 - [Achyut Katiyar](https://github.com/Achyut21)
-- [Nikhila Koneru]
+- [Nikhila Koneru](https://github.com/NikhilaXKoneru)
 - [Revan ](https://github.com/Revan1010)
 - [Anand Pinnamaneni](https://github.com/Anand283)
 
