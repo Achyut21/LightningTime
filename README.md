@@ -1,6 +1,6 @@
 # ⚡ Lightning Time
 
-A Bitcoin Lightning Network-powered time tracking web app that allows users to "check in" to track their work time and automatically receive Satoshi (SATs) payments for each hour worked. Built for a 30-hour hackathon.
+A Bitcoin Lightning Network-powered time tracking web app that allows users to "check in" to track their work time and automatically receive Satoshi (SATs) payments for each hour worked. Built during the MIT BITCOIN EXPO 2025 Hackathon.
 
 ![Lightning Time App](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/356/081/datas/small.png)
 
@@ -178,4 +178,5 @@ This project is released under the MIT License.
 
 - [LNbits](https://lnbits.com/) for providing the Lightning Network infrastructure
 - [Bitcoin](https://bitcoin.org/) for enabling peer-to-peer electronic payments
-- Vitalik Buterin and team for the [Soulbound Tokens concept](https://vitalik.ca/general/2022/01/26/soulbound.html)
+- The MIT Bitcoin Club and Lighting team for their support and mentorship
+
