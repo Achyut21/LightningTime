@@ -2,7 +2,7 @@
 
 A Bitcoin Lightning Network-powered time tracking web app that allows users to "check in" to track their work time and automatically receive Satoshi (SATs) payments for each hour worked. Built for a 30-hour hackathon.
 
-![Lightning Time App]([(https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/356/081/datas/small.png)])
+![Lightning Time App](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/356/081/datas/small.png)
 
 ## Features
 
